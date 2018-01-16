@@ -1,4 +1,4 @@
-# CO2 attractio
+# CO2 attraction in Drosophila
 This repository contains the software associated with the paper "Drosophila have distinct activity-gated pathways that mediate attraction and aversion to CO2". For a pre-print, see: https://www.biorxiv.org/content/early/2017/12/03/227991
 
 The data (4 TB) will be available upon reasonable request upon formal publication.
