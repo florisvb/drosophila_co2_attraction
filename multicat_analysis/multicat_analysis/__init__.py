@@ -1,0 +1,8 @@
+import config_analysis
+import plot_n_flies
+import analyze_raw_data
+import plot_alicat
+import legacy_config_analysis
+import legacy_analyze_raw_data
+import plot_circadian
+import plot_nflies_vs_speed_scatter
