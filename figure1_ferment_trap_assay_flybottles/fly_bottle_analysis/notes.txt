@@ -1,0 +1,5 @@
+
+
+20 L /min
+
+compressor > flow controller > flow meter > CO2 scrubber > [test bottle] > 1 liter empty air tank > LiCorr
