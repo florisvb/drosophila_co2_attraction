@@ -61,7 +61,7 @@ def get_attraction_index_and_speed(directory, flowrate, time_of_day):
     
     return speed_black, AI    
 
-def get_new_attraction_index(directories, flowrates=1, localtimerange=[14,36], average_within_paths=False):
+def get_new_attraction_index(directories, flowrates=1, localtimerange=[14,36], average_within_paths=False, use_first_half_of_odor_presentation=False):
     control = np.array([])
     odor = np.array([])
     speed = np.array([])
@@ -86,12 +86,25 @@ def get_new_attraction_index(directories, flowrates=1, localtimerange=[14,36], a
             pd = pandas.read_pickle(pd_pickle_filename)
             config = mta.read_hdf5_file_to_pandas.load_config_from_path(path)
             if type(localtimerange) is str:
-                localtimerange = config.portion_of_day_to_local_time_range[localtimerange]
+                use_localtimerange = config.portion_of_day_to_local_time_range[localtimerange]
+            else:
+                use_localtimerange = localtimerange
             if 'hot' in directory and localtimerange==[14,36]: # if hot directory, and localtime range is default
-                localtimerange = [14, 30]
+                use_localtimerange = [14, 30]
             
-            query = "(action == 'left' or action == 'right') and (flowrate < " + str(flowrate+.005) + " and flowrate > " + str(flowrate-0.005) + ") and (localtime < " + str(localtimerange[1]) + " and localtime > " + str(localtimerange[0]) + ")"
+            query = "(action == 'left' or action == 'right') and (flowrate < " + str(flowrate+.005) + " and flowrate > " + str(flowrate-0.005) + ") and (localtime <= " + str(use_localtimerange[1]) + " and localtime >= " + str(use_localtimerange[0]) + ")"
             pd_tmp = pd.query(query)
+
+
+            print
+            print
+            print path
+            print localtimerange
+            print query
+            print pd_tmp
+            if len(pd_tmp) == 0:
+                print 'NO DATA HERE'
+                continue
 
             experiment_types = {'hot': 2, 'noonstarved': 0, '24hrstarved': 1}
             N = pd_tmp.n_flies_control.values.shape[0]
@@ -101,28 +114,45 @@ def get_new_attraction_index(directories, flowrates=1, localtimerange=[14,36], a
                 
 
             if average_within_paths:
-                raise NotImplementedError
-            
+                pd_tmp = pd_tmp[['t', 'speed', 'n_flies_control', 'n_flies_odor']].sum(axis=0)/float(pd_tmp.shape[0])
+                tmp_n_flies_control = np.reshape(pd_tmp.n_flies_control, [1, len(pd_tmp.n_flies_control)])
+                tmp_n_flies_odor = np.reshape(pd_tmp.n_flies_odor, [1, len(pd_tmp.n_flies_control)])
+                tmp_speed = np.reshape(pd_tmp.speed, [1, len(pd_tmp.n_flies_control)])
+                tmp_t = np.reshape(pd_tmp.t, [1, len(pd_tmp.n_flies_control)])
+
+                print 'averaging within paths!!!!!!'
+                print type(tmp_n_flies_control)
+                print tmp_n_flies_control.shape
+
+            else:
+                pd_tmp = pd_tmp[['t', 'speed', 'n_flies_control', 'n_flies_odor']]
+                tmp_n_flies_control = np.vstack(pd_tmp.n_flies_control.values)
+                tmp_n_flies_odor = np.vstack(pd_tmp.n_flies_odor.values)
+                tmp_speed = np.vstack(pd_tmp.speed.values)
+                tmp_t = np.vstack(pd_tmp.t.values)
+
             try:
                 if len(control) == 0:
-                    control = np.vstack(pd_tmp.n_flies_control.values)
+                    control = np.vstack(tmp_n_flies_control)
                 else:
-                    control = np.vstack((control, np.vstack(pd_tmp.n_flies_control.values)))
+                    control = np.vstack((control, tmp_n_flies_control))
+
+                print control
 
                 if len(odor) == 0:
-                    odor = np.vstack(pd_tmp.n_flies_odor.values)
+                    odor = np.vstack(tmp_n_flies_odor)
                 else:
-                    odor = np.vstack((odor, np.vstack(pd_tmp.n_flies_odor.values)))
+                    odor = np.vstack((odor, tmp_n_flies_odor))
 
                 if len(speed) == 0:
-                    speed = np.vstack(pd_tmp.speed.values)
+                    speed = np.vstack(tmp_speed)
                 else:
-                    speed = np.vstack((speed, np.vstack(pd_tmp.speed.values)))
+                    speed = np.vstack((speed, tmp_speed))
 
                 if len(t) == 0:
-                    t = np.vstack(pd_tmp.t.values)
+                    t = np.vstack(tmp_t)
                 else:
-                    t = np.vstack((t, np.vstack(pd_tmp.t.values)))
+                    t = np.vstack((t, tmp_t))
 
             except:
                 pass
@@ -156,7 +186,11 @@ def get_new_attraction_index(directories, flowrates=1, localtimerange=[14,36], a
 
     sp = np.mean(speed[indices_to_sort][:,sixth:third], axis=1)
 
-    re = np.mean(response[:,odor_on:odor_off], axis=1)
+    if use_first_half_of_odor_presentation:
+        re = np.mean(response[:,odor_on:odor_middle], axis=1)
+    else:
+        re = np.mean(response[:,odor_on:odor_off], axis=1)
+    
 
     return response, speed, indices_to_sort, sp, re, experiment_type, t
 

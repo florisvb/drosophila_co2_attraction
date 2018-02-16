@@ -31,7 +31,7 @@ import orchard.annotated_time_on_pad_analysis as ann
 import figurefirst
 
 import co2_paper_locations
-
+import pairs2groups
 
 def get_paper_layout(version='old'):
     if version == 'old':
@@ -89,6 +89,11 @@ def plot_lengths_simple(data=None):
     yticks = []
     
     nlabels = 0
+
+    data_for_stats = { 'time': {},
+                       'distance': {},
+                       'approaches': {},
+                       'speed': {}}
     for x, label in enumerate(labels):
     
         #if label == 'none':
@@ -121,7 +126,8 @@ def plot_lengths_simple(data=None):
             layout.axes[('time', ff_label)].tick_params(length=2.5)
         else:
             figurefirst.mpl_functions.adjust_spines(layout.axes[('time', ff_label)], [])
-        
+        data_for_stats['time'][label.split('_')[0]] = length
+
         distances = np.array(data_dict_distances[label])*30./46
         fpl.scatter_box(layout.axes[('distances', ff_label)], 0, distances, color=color_dict[label], shading='95conf', markersize=MARKERSIZE, edgecolor='none', hide_markers=True, flipxy=False, use='median', xwidth=0.4)
         layout.axes[('distances', ff_label)].set_xlim(-0.5,0.5)
@@ -131,6 +137,7 @@ def plot_lengths_simple(data=None):
             layout.axes[('distances', ff_label)].tick_params(length=2.5)
         else:
             figurefirst.mpl_functions.adjust_spines(layout.axes[('distances', ff_label)], [])
+        data_for_stats['distance'][label.split('_')[0]] = distances
 
         speeds = np.array(data_dict_speeds[label])*30./46*10 # raw speed is in pixels per frame
         fpl.scatter_box(layout.axes[('speeds', ff_label)], 0, speeds, color=color_dict[label], shading='95conf', markersize=MARKERSIZE, edgecolor='none', hide_markers=True, flipxy=False, use='median', xwidth=0.4)
@@ -141,6 +148,7 @@ def plot_lengths_simple(data=None):
             layout.axes[('speeds', ff_label)].tick_params(length=2.5)
         else:
             figurefirst.mpl_functions.adjust_spines(layout.axes[('speeds', ff_label)], [])
+        data_for_stats['speed'][label.split('_')[0]] = speeds
         
         entries = data_dict_entries[label]
         r = scipy.stats.uniform(-0.25,0.25)
@@ -153,6 +161,7 @@ def plot_lengths_simple(data=None):
             layout.axes[('approaches', ff_label)].tick_params(length=2.5)
         else:
             figurefirst.mpl_functions.adjust_spines(layout.axes[('approaches', ff_label)], [])
+        data_for_stats['approaches'][label.split('_')[0]] = entries
 
         print 'done with: ', label
         
@@ -160,6 +169,25 @@ def plot_lengths_simple(data=None):
         
     for figurename in ['approaches', 'distances', 'time', 'speeds']:
         flytext.set_fontsize(layout.figures[figurename], 6)
+
+    #########################################################
+    # STATISTICS
+    #########################################################
+    odor_labels = ['h2o', 'co2', 'eth', 'eth-co2', 'vinegar'] 
+    for analysis_string in ['time', 'distance', 'approaches', 'speed']:
+        populations = [np.array(data_for_stats[analysis_string][k]) for k in odor_labels]
+        group_info = pairs2groups.label_homogeneous_groups(populations, significance_level=0.05)
+        group_strings = group_info['group_strings']
+
+        for i, odor_label in enumerate(odor_labels):
+            svgtext = layout.svgitems[analysis_string][odor_label]
+            svgtext.text = group_strings[i]
+            svgtext.style['font-size'] = 6
+
+        print group_info
+    ########################################################
+
+    layout.apply_svg_attrs()
 
     layout.append_figure_to_layer(layout.figures['approaches'], 'approaches', cleartarget=True)
     layout.append_figure_to_layer(layout.figures['distances'], 'distances', cleartarget=True)

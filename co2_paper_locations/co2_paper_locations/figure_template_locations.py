@@ -15,7 +15,7 @@ elif co2_paper_locations_profile == "analysiscavetech-organized":
 elif co2_paper_locations_profile == "analysiscavetech-portable":
 		basepath = "/home/caveman/Dropbox_flyranch/2017_CO2/analysis"
 elif co2_paper_locations_profile == "uw":
-        basepath = "/home/caveman/Dropbox_flyranch/2017_CO2/analysis"            
+        basepath = "/home/caveman/Dropbox_flyranch/2017_CO2/drosophila_co2_attraction"            
 
 figure1_ferment_trapassay_flybottles = os.path.join(basepath, "figure1_ferment_trap_assay_flybottles/figure1_ferment_trapassay_flybottles.svg")
 sup_figure_co2_calibration = os.path.join(basepath, "figure1_ferment_trap_assay_flybottles/sup_figure_co2_calibration.svg")
@@ -38,3 +38,4 @@ figure5_walking_arena_genetics_speed_control = os.path.join(basepath, "figure5_w
 
 figure5_walking_arena_genetics_control = os.path.join(basepath, "figure5_walking_arena_genetics/figure5_speed_sorted_walking_genetics_control.svg")
 
+figure5_full_template = os.path.join(basepath, "figure5_walking_arena_genetics/figure5_full_supplement_template.svg")

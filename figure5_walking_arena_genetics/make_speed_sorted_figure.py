@@ -231,3 +231,24 @@ def make_figure():
 
 def make_control_figure():
     make_summary_of_genetic_experiments(figure='control')
+
+def make_hcs_full_for_specific_directory(directory, flowrate, name, use_speed_intercept):
+    svg_template = co2_paper_locations.figure_template_locations.figure5_full_template
+    svg_output = os.path.join(os.path.dirname(svg_template), name)
+
+    paths = mta.read_hdf5_file_to_pandas.get_filenames(directory, 
+        contains='', does_not_contain=DOES_NOT_CONTAIN)
+
+
+    print paths
+
+    layout = figurefirst.svg_to_axes.FigureLayout(svg_template)
+    layout.make_mplfigures()
+
+    plot_nflies_vs_speed_scatter.plot_odor_response_speed_and_time_matrix(paths, flowrates=flowrate, flowrate_label='hcs_full', 
+                                                                            use_speed_intercept=use_speed_intercept, layout=layout)
+    layout.append_figure_to_layer(layout.figures['hcs_full'], 'hcs_full', cleartarget=True)
+    
+    layout.write_svg(svg_output)
+
+    

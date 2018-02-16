@@ -80,18 +80,19 @@ def __add_approaches_landings_blob_data_to_panel__(label, analysis, odor_state, 
     analysis_means_on = flystat.resampling.bootstrap_medians_from_data(analysis_on, iterations=1000, use='mean')
     confidence_interval_95 = flystat.resampling.bootstrap_confidence_intervals_for_medians(analysis_means_on, confidence_lo=0.025, confidence_hi=0.975)
     fpl.plot_confidence_interval(ax, x, np.mean(analysis_on), confidence_interval_95, confidence_interval_50=None, width=0.2, color=color, linewidth=1, alpha95=0.3, alpha50=0)
+    return analysis_on
 
-def make_approaches_landings_blob_panel(ax, analysis, orco=False):
+def make_approaches_landings_blob_panel(ax, analysis, layout, orco=False):
     if not orco:
-        __add_approaches_landings_blob_data_to_panel__('hcs_co2_15sccm', analysis, 'off', ax, -.3)
-        __add_approaches_landings_blob_data_to_panel__('hcs_co2_60sccm', analysis, 'off', ax, -.1)
-        __add_approaches_landings_blob_data_to_panel__('hcs_co2_15sccm', analysis, 'on', ax, .1)
-        __add_approaches_landings_blob_data_to_panel__('hcs_co2_60sccm', analysis, 'on', ax, .3)
+        hcs_co2_15_off = __add_approaches_landings_blob_data_to_panel__('hcs_co2_15sccm', analysis, 'off', ax, -.3)
+        hcs_co2_60_off = __add_approaches_landings_blob_data_to_panel__('hcs_co2_60sccm', analysis, 'off', ax, -.1)
+        hcs_co2_15_on = __add_approaches_landings_blob_data_to_panel__('hcs_co2_15sccm', analysis, 'on', ax, .1)
+        hcs_co2_60_on = __add_approaches_landings_blob_data_to_panel__('hcs_co2_60sccm', analysis, 'on', ax, .3)
         
-        __add_approaches_landings_blob_data_to_panel__('hcs_eth_15sccm', analysis, 'off', ax, .7)
-        __add_approaches_landings_blob_data_to_panel__('hcs_eth_60sccm', analysis, 'off', ax, .9)
-        __add_approaches_landings_blob_data_to_panel__('hcs_eth_15sccm', analysis, 'on', ax, 1.1)
-        __add_approaches_landings_blob_data_to_panel__('hcs_eth_60sccm', analysis, 'on', ax, 1.3)
+        hcs_eth_15_off = __add_approaches_landings_blob_data_to_panel__('hcs_eth_15sccm', analysis, 'off', ax, .7)
+        hcs_eth_60_off = __add_approaches_landings_blob_data_to_panel__('hcs_eth_60sccm', analysis, 'off', ax, .9)
+        hcs_eth_15_on = __add_approaches_landings_blob_data_to_panel__('hcs_eth_15sccm', analysis, 'on', ax, 1.1)
+        hcs_eth_60_on = __add_approaches_landings_blob_data_to_panel__('hcs_eth_60sccm', analysis, 'on', ax, 1.3)
     
     else:
         __add_approaches_landings_blob_data_to_panel__('orco_co2_15sccm', analysis, 'off', ax, -.3)
@@ -100,6 +101,33 @@ def make_approaches_landings_blob_panel(ax, analysis, orco=False):
         __add_approaches_landings_blob_data_to_panel__('orco_eth_15sccm', analysis, 'off', ax, .7)
         __add_approaches_landings_blob_data_to_panel__('orco_eth_15sccm', analysis, 'on', ax, 1.1)
     
+    # convert analysis name to string name
+    analysis_to_str = {'approached': 'approach_odor_pad',
+                        'landed': 'land',
+                        'blob': 'approach_dark_spot'}
+
+    # statistics
+    import pairs2groups
+    populations = { 'hcs_co2_15_off': hcs_co2_15_off, 
+                    'hcs_co2_60_off': hcs_co2_60_off, 
+                    'hcs_co2_15_on': hcs_co2_15_on, 
+                    'hcs_co2_60_on': hcs_co2_60_on,
+                    'hcs_eth_15_off': hcs_eth_15_off, 
+                    'hcs_eth_60_off': hcs_eth_60_off, 
+                    'hcs_eth_15_on': hcs_eth_15_on, 
+                    'hcs_eth_60_on': hcs_eth_60_on}
+    group_info = pairs2groups.label_homogeneous_groups([populations[k] for k in populations.keys()], significance_level=0.05)
+    group_strings = group_info['group_strings']
+    print analysis
+
+    for i, pop_name in enumerate(populations.keys()):
+        svgtext = layout.svgitems[analysis_to_str[analysis]][pop_name]
+        svgtext.text = group_strings[i]
+        svgtext.style['font-size'] = 6
+
+    print group_info
+    
+
     xticks = [0, 1]
     yticks = [0, 0.15, 0.3]
     ax.set_xlim(-.5,1.5)
@@ -138,7 +166,7 @@ def make_xz_plot(ax, pd, aspect_ratio, draw_boxes=False):
     
     if draw_boxes:
         from matplotlib import patches
-        rect_downwind = patches.Rectangle( (0.06, 0), .1-0.06, 0.03, fill=False, color=(1,.4235,1), linewidth=1)
+        rect_downwind = patches.Rectangle( (0.06, 0), .1-0.06, 0.03, fill=False, color='gold', linewidth=1)
         rect_blob = patches.Rectangle( (0.3, -.15), .1, .05, fill=False, color='lime', linewidth=1)
         rect_onpad = patches.Rectangle( (-.03, -.01), .07, .01+.003, fill=False, color='cyan', linewidth=1)
         rect_control = patches.Rectangle( (0.31, -.03), .2, .06+.03, fill=False, color='white', linewidth=1)
@@ -311,10 +339,11 @@ def make_paper_figure(co2_datasets=None, eth_datasets=None, orco=False):
 
 def make_statistics_plot(orco=False):
     layout = get_paper_layout()
-    make_approaches_landings_blob_panel(layout.axes[('windtunnel_quanitified', 'approached_pad')]['axis'], 'approached', orco=orco)
-    make_approaches_landings_blob_panel(layout.axes[('windtunnel_quanitified', 'landing_pad')]['axis'], 'landed', orco=orco)
-    make_approaches_landings_blob_panel(layout.axes[('windtunnel_quanitified', 'approached_blob')]['axis'], 'blob', orco=orco)
+    make_approaches_landings_blob_panel(layout.axes[('windtunnel_quanitified', 'approached_pad')]['axis'], 'approached', layout, orco=orco)
+    make_approaches_landings_blob_panel(layout.axes[('windtunnel_quanitified', 'landing_pad')]['axis'], 'landed', layout, orco=orco)
+    make_approaches_landings_blob_panel(layout.axes[('windtunnel_quanitified', 'approached_blob')]['axis'], 'blob', layout, orco=orco)
     layout.append_figure_to_layer(layout.figures['windtunnel_quanitified'], 'windtunnel_quanitified', cleartarget=True)
+    layout.apply_svg_attrs()
     layout.write_svg(figure_template_locations.figure2_freeflight )
     
 

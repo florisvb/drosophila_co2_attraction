@@ -2,12 +2,12 @@
 
 if __name__ == '__main__':
 
-    import make_time_on_pad_plots_multiconcentration
-    make_time_on_pad_plots_multiconcentration.plot_all_lengths(version='new')
+    #import make_time_on_pad_plots_multiconcentration
+    #make_time_on_pad_plots_multiconcentration.plot_all_lengths(version='new')
 
-    import plot_co2_concentration
-    plot_co2_concentration.plot_co2_concentration()
-    plot_co2_concentration.plot_co2_calibration()
+    #import plot_co2_concentration
+    #plot_co2_concentration.plot_co2_concentration()
+    #plot_co2_concentration.plot_co2_calibration()
 
     import plot_trajectories
     plot_trajectories.plot_all_trajectories_on_figure(version='new')

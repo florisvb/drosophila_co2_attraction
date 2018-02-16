@@ -360,7 +360,7 @@ def get_color_from_ffname(ffname):
 #        cmap = matplotlib.cm.get_cmap('winter')
 #        color = cmap( ffname_to_color[ffname]/3. )
     if ffname == 'high_flow_co2_dusk':
-        color = 'red'
+        color = 'maroon'
     elif ffname == 'high_flow_arista_dusk':
         color = 'purple'
     elif ffname == 'high_flow_warm_dusk':

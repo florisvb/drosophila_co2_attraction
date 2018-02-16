@@ -173,6 +173,8 @@ def get_nflies_and_speed_at_time_for_directory(directory, localtimerange, flowra
         n_flies_control_for_exp = []
         speed_for_exp = []
         for index in pd_tmp.index:
+            
+            
             if type(time_secs) is list:
                 time_secs_loc_0 = np.abs(pd_tmp.loc[index].t - time_secs[0]).argmin()
                 time_secs_loc_1 = np.abs(pd_tmp.loc[index].t - time_secs[-1]).argmin()
