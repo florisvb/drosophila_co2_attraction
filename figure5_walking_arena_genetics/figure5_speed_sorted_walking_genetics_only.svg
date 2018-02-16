@@ -13,7 +13,7 @@
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    height="340mm"
    id="svg4324"
-   inkscape:export-filename="/Users/florisvb/Dropbox (flyranch)/2017_CO2/20170921_figure_drafts/figure5.png"
+   inkscape:export-filename="/home/caveman/Dropbox_flyranch/van Breugel et al., 2017 (CO2)/figures_v2/figure5.png"
    inkscape:export-xdpi="600"
    inkscape:export-ydpi="600"
    inkscape:version="0.91 r13725"
@@ -27,17 +27,17 @@
      borderopacity="1.0"
      id="base"
      inkscape:current-layer="layer3"
-     inkscape:cx="-80.740935"
-     inkscape:cy="611.66424"
+     inkscape:cx="82.473772"
+     inkscape:cy="1031.1489"
      inkscape:document-units="px"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:window-height="1056"
+     inkscape:window-height="2124"
      inkscape:window-maximized="1"
-     inkscape:window-width="1855"
-     inkscape:window-x="65"
-     inkscape:window-y="24"
-     inkscape:zoom="0.74953319"
+     inkscape:window-width="3742"
+     inkscape:window-x="98"
+     inkscape:window-y="36"
+     inkscape:zoom="4.24"
      pagecolor="#ffffff"
      showgrid="false"
      units="mm" />
@@ -708,6 +708,26 @@
        style="color-interpolation-filters:sRGB">
       <feBlend
          id="feBlend4170-7-64-6-3"
+         in2="BackgroundImage"
+         inkscape:collect="always"
+         mode="lighten" />
+    </filter>
+    <filter
+       id="filter4168-0-1"
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB">
+      <feBlend
+         id="feBlend4170-1-1"
+         in2="BackgroundImage"
+         inkscape:collect="always"
+         mode="lighten" />
+    </filter>
+    <filter
+       id="filter4168-0-1-0"
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB">
+      <feBlend
+         id="feBlend4170-1-1-7"
          in2="BackgroundImage"
          inkscape:collect="always"
          mode="lighten" />
@@ -5850,6 +5870,38 @@
            x="70.405319"
            y="146.87221">mm/s</tspan></text>
     </g>
+    <text
+       id="text293286-2-3-3"
+       sodipodi:linespacing="100%"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.49999952px;line-height:100%;font-family:FreeSans;-inkscape-font-specification:'FreeSans, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:100000;stroke-opacity:1;filter:url(#filter4168-0-1);enable-background:new"
+       x="44.17387"
+       xml:space="preserve"
+       y="6.9524994"
+       transform="matrix(102.4,0,0,102.40001,-1917.6185,1368.5698)"><tspan
+         id="tspan9507-5-3"
+         sodipodi:role="line"
+         style="font-style:italic;font-variant:normal;font-weight:600;font-stretch:normal;font-size:7.49999952px;line-height:100%;font-family:FreeSans;-inkscape-font-specification:'FreeSans Semi-Bold Italic';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#000000;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:100000"
+         x="44.17387"
+         y="6.9524994"><tspan
+           style="font-style:italic;font-variant:normal;font-weight:600;font-stretch:normal;font-size:10px;font-family:FreeSans;-inkscape-font-specification:'FreeSans Semi-Bold Italic';stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:100000"
+           id="tspan6022">(CO</tspan><tspan
+           id="tspan9509-5-2"
+           style="font-style:italic;font-variant:normal;font-weight:600;font-stretch:normal;font-size:7.125px;font-family:FreeSans;-inkscape-font-specification:'FreeSans Semi-Bold Italic';baseline-shift:sub;fill:#000000;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:100000">2</tspan><tspan
+           style="font-style:italic;font-variant:normal;font-weight:600;font-stretch:normal;font-size:10px;font-family:FreeSans;-inkscape-font-specification:'FreeSans Semi-Bold Italic';stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:100000"
+           id="tspan6024">)</tspan></tspan></text>
+    <text
+       id="text293286-2-3-3-3"
+       sodipodi:linespacing="100%"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.49999952px;line-height:100%;font-family:FreeSans;-inkscape-font-specification:'FreeSans, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:100000;stroke-opacity:1;filter:url(#filter4168-0-1-0);enable-background:new"
+       x="14.482467"
+       xml:space="preserve"
+       y="8.3509998"
+       transform="matrix(102.4,0,0,102.40001,1385.5464,14961.996)"><tspan
+         id="tspan9507-5-3-8"
+         sodipodi:role="line"
+         style="font-style:italic;font-variant:normal;font-weight:600;font-stretch:normal;font-size:10px;line-height:100%;font-family:FreeSans;-inkscape-font-specification:'FreeSans Semi-Bold Italic';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#000000;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:100000"
+         x="14.482467"
+         y="8.3509998">(EtOH)</tspan></text>
   </g>
   <g
      figurefirst:date-modified="Nov 28 2017 09:57:10 PST"
