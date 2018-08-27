@@ -3,12 +3,14 @@ This repository contains the software associated with the paper "Drosophila have
 
 The data (4 TB) will be available upon reasonable request upon formal publication.
 
-This readme assumes working knowledge of Ubuntu and python. This code is not actively maintained. It worked on 2018-01-16 using up-to-date versions of the required software below.
+Processed data is available through this repository, along with instructions for use, under the folder `data/`.
+
+This readme assumes working knowledge of Ubuntu and python. This code is not actively maintained. It worked on 2018-08-27 using up-to-date versions of the required software below.
 
 Code and data are licensed under a [Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) License](https://creativecommons.org/licenses/by-nc-sa/4.0/ "CC BY-NC-SA 4.0").
 
 ## What you need to run our analysis
-* Ubuntu (we used Ubuntu 12-16)
+* Ubuntu (we used Ubuntu 16)
 * Python (2.7)
 * ROS (Robot Operating System, Kinetic): http://wiki.ros.org/kinetic/Installation/Ubuntu
 * apt-get repositories: git python-pip python-scipy python-h5py python-progressbar python-sympy python-networkx
