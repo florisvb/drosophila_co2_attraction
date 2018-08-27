@@ -1,5 +1,5 @@
 *.pyc
-*old
-*bkup
+*.DS_Store
+*.ipynb_checkpoints/
 *build
-*~
+*old
