@@ -1,0 +1,8 @@
+Start in neutral zone
+For each second of CO2 stimulus (10 minutes):
+    If CO2 detected based on concentration dependent probability:
+        enter CO2 zone
+    If time spent in CO2 zone > 2 minutes (or 30 seconds for 15% CO2):
+        enter clean air zone
+    If time spent in clean air zone > 30 minutes:
+        enter neutral zone
