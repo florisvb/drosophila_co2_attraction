@@ -6,3 +6,9 @@ import legacy_config_analysis
 import legacy_analyze_raw_data
 import plot_circadian
 import plot_nflies_vs_speed_scatter
+import plot_genetic_summary_table
+import make_speed_sorted_figure
+import make_time_on_pad_plots_multiconcentration
+import windtunnel_pad_compared_to_walking_data
+import plot_trajectories
+import plot_co2_concentration

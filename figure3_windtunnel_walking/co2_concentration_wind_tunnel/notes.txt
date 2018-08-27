@@ -1,1 +1,0 @@
-c5_d2_e3m means concentration of 5 sccm co2 added to 100sccm air, distance of 2 cm from edge of pad, elevation of minus 3 cm

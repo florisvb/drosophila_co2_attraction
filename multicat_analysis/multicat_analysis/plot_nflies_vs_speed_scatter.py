@@ -237,9 +237,9 @@ def plot_odor_response_speed_and_time_matrix(directories, flowrates=1, localtime
             ax = layout.axes[(flowrate_label, 'correlation')]
             sp_indices = np.array([i for i in range(len(sp))])
             if 'single' not in ''.join(directories):
-                ax.scatter(re, sp_indices, marker='.', c=re, cmap='seismic', vmax=7, vmin=-7, linewidth=0.2)
+                ax._scatter(['Attraction index vs Speed', 'Attraction index', 'Relative speed ranking'], re, sp_indices, marker='.', c=re, cmap='seismic', vmax=7, vmin=-7, linewidth=0.2)
             else:
-                ax.scatter(re, sp_indices, marker='.', c=re, cmap='seismic', vmax=0.7, vmin=-0.7, linewidth=0.2)
+                ax._scatter(['Attraction index vs Speed', 'Attraction index', 'Relative speed ranking'], re, sp_indices, marker='.', c=re, cmap='seismic', vmax=0.7, vmin=-0.7, linewidth=0.2)
 
             
             x = np.linspace(np.min(sp), np.max(sp), len(sp_indices))
@@ -248,7 +248,7 @@ def plot_odor_response_speed_and_time_matrix(directories, flowrates=1, localtime
             for _x_ in x:
                 ix = np.argmin(np.abs(sp-_x_))
                 x_indices.append(ix)
-            ax.plot(y,x_indices,color='black')
+            ax._plot([], y,x_indices,color='black')
             #ax.vlines(0, 0, len(sp_indices), linewidth=0.5)
 
             if np.min(re)<-7:
@@ -256,18 +256,25 @@ def plot_odor_response_speed_and_time_matrix(directories, flowrates=1, localtime
             else:
                 lo = -7
 
+            ax.record = True
             ax.set_ylim(0,len(sp_indices))
             ax.hlines(x_intercept_index,lo,7,color='magenta')
             if 'single' not in ''.join(directories):
                 ax.set_xlim(lo,7)
-                figurefirst.mpl_functions.adjust_spines(ax, ['top'], xticks=[lo,0,7], spine_locations={'bottom': 5, 'bottom': 5}, linewidth=0.5)
+                ax.adjust_spines(['top'], xticks=[lo,0,7], spine_locations={'bottom': 2.5, 'top': 2.5}, linewidth=0.5)
                 ax.tick_params(length=2.5)
             else:
                 ax.set_xlim(lo/10.,0.7)
-                figurefirst.mpl_functions.adjust_spines(ax, ['top'], xticks=[lo/10.,0,0.7], spine_locations={'bottom': 5, 'bottom': 5}, linewidth=0.5)
+                ax.adjust_spines(['top'], xticks=[lo/10.,0,0.7], spine_locations={'bottom': 2.5, 'top': 2.5}, linewidth=0.5)
                 ax.tick_params(length=2.5)
             ax.set_xticklabels([lo/10., 0, 0.7])
-            flytext.set_fontsize(ax.figure, 6)
+            ax.set_fontsize(5)
+
+            def set_tick_distance(ax):
+                for tick in ax.xaxis.get_majorticklabels(): 
+                    tick.set_y(0.97)
+            ax._custom([], set_tick_distance)
+            ax.record = False
 
         try:
             ax = layout.axes[(flowrate_label, 'nflies')]
@@ -275,10 +282,11 @@ def plot_odor_response_speed_and_time_matrix(directories, flowrates=1, localtime
             ax = None   
         if ax is not None:
             if 'single' not in ''.join(directories):
-                ax.imshow(response, extent=[-10,20,0,response.shape[0]], aspect='auto', origin='lower', interpolation='nearest', cmap='bwr', vmax=7, vmin=-7)
+                ax._imshow(['Preference index', 'Preference index array'], response, extent=[-10,20,0,response.shape[0]], aspect='auto', origin='lower', interpolation='nearest', cmap='seismic', vmax=7, vmin=-7)
             else:
-                ax.imshow(response, extent=[-10,20,0,response.shape[0]], aspect='auto', origin='lower', interpolation='nearest', cmap='bwr', vmax=0.7, vmin=-0.7)
+                ax._imshow(['Preference index', 'Preference index array'], response, extent=[-10,20,0,response.shape[0]], aspect='auto', origin='lower', interpolation='nearest', cmap='seismic', vmax=0.7, vmin=-0.7)
             
+            ax.record = True
             ax.vlines(0, 0, response.shape[0], color='lime')
             ax.vlines(10, 0, response.shape[0], color='lime')
             ax.hlines(x_intercept_index,-10,20,color='magenta') 
@@ -288,7 +296,8 @@ def plot_odor_response_speed_and_time_matrix(directories, flowrates=1, localtime
             #ax.set_xlabel('time, min')
             #ax.set_ylabel('speed, ordered (top = high)')
             #return t, speed, response
-            figurefirst.mpl_functions.adjust_spines(ax, [])
+            ax.adjust_spines([])
+            ax.record = False
 
         if (flowrate_label, 'experiment_type') in layout.axes:
             ax = layout.axes[(flowrate_label, 'experiment_type')]
@@ -300,7 +309,7 @@ def plot_odor_response_speed_and_time_matrix(directories, flowrates=1, localtime
         except:
             ax = None   
         if ax is not None:
-            ax.imshow(speed[indices_to_sort], extent=[-10,20,0,response.shape[0]], aspect='auto', origin='lower', interpolation='nearest', cmap='hot', vmax=8, vmin=0)
+            ax._imshow(['Speed', 'Sorted speed array'], speed[indices_to_sort], extent=[-10,20,0,response.shape[0]], aspect='auto', origin='lower', interpolation='nearest', cmap='hot', vmax=8, vmin=0)
             wn = 0.01
             b, a = scipy.signal.butter(3, wn)
             sp_array = np.repeat(sp.reshape(len(sp),1), speed.shape[1], axis=1)
@@ -314,6 +323,7 @@ def plot_odor_response_speed_and_time_matrix(directories, flowrates=1, localtime
             _speed *= 0.3*response.shape[0]
             _speed += 0.15*response.shape[0]
             #ax.plot(t[0,:]/60., _speed, color='white', linewidth=0.5)
+            ax.record = True
             ax.set_ylim(0,response.shape[0])
             ax.vlines(0, 0, response.shape[0], color='lime')
             ax.vlines(10, 0, response.shape[0], color='lime')
@@ -323,7 +333,8 @@ def plot_odor_response_speed_and_time_matrix(directories, flowrates=1, localtime
             #ax.set_ylabel('speed, ordered\n(top = high)')
             #ax.set_xlabel('time, min')
             ax.set_xlim(-10,20)
-            figurefirst.mpl_functions.adjust_spines(ax, [])
+            ax.adjust_spines([])
+            ax.record = False
 
         if speed_layout is not None:
             ax = speed_layout.axes[(flowrate_label, 'high_speed')]
@@ -353,6 +364,8 @@ def plot_odor_response_speed_and_time_matrix(directories, flowrates=1, localtime
             figurefirst.mpl_functions.adjust_spines(ax, [])
             layout.append_figure_to_layer(speed_layout.figures[flowrate_label], flowrate_label, cleartarget=True)
 
+
+
         # high speed
         high_speed_response = np.mean(response[x_intercept_index:,:], axis=0)
         ax = layout.axes[(flowrate_label, 'high_speed')]
@@ -369,14 +382,17 @@ def plot_odor_response_speed_and_time_matrix(directories, flowrates=1, localtime
         plot_n_flies.plot_mean_and_95_confidence(ax, t[x_intercept_index:,:], response[x_intercept_index:,:], 
             (0.001, 0.001, 0.001), color_mean=color_mean,
             zorder=10)
-        ax.set_rasterization_zorder(12)
-        ax.fill_between([0, 600], -7, 7, facecolor='green', edgecolor='none', alpha=0.3)
+        ax._set_rasterization_zorder([], 12)
+        ax._fill_between(['Odor stimulus', 'Time when odor on (secs)'], [0, 600], -7, 7, facecolor='green', edgecolor='none', alpha=0.3)
+        ax.record = True
         if 'single' not in ''.join(directories):
             ax.set_ylim(-7,7)
         else:
             ax.set_ylim(-0.7,0.7)
         ax.set_xlim(-10*60,20*60)
-        figurefirst.mpl_functions.adjust_spines(ax, [])
+        print ax, ax.breadcrumb
+        ax.adjust_spines([])
+        ax.record = False
 
         # low speed
         low_speed_response = np.mean(response[x_intercept_index_minspeed:x_intercept_index,:], axis=0)
@@ -395,15 +411,17 @@ def plot_odor_response_speed_and_time_matrix(directories, flowrates=1, localtime
                 response[x_intercept_index_minspeed:x_intercept_index,:], 
                 (0.001, 0.001, 0.001), color_mean=color_mean,
                 zorder=10)
-            ax.set_rasterization_zorder(12)
-            ax.fill_between([0, 600], -7, 7, facecolor='green', edgecolor='none', alpha=0.3)
+            ax._set_rasterization_zorder([], 12)
+            ax._fill_between(['Odor stimulus', 'Time when odor on (secs)'], [0, 600], -7, 7, facecolor='green', edgecolor='none', alpha=0.3)
+            ax.record = True
             if 'single' not in ''.join(directories):
                 ax.set_ylim(-7,7)
             else:
                 ax.set_ylim(-0.7,0.7)
             ax.set_xlim(-10*60,20*60)
-        figurefirst.mpl_functions.adjust_spines(ax, [])
-
+            ax.record = False
+        ax._adjust_spines([], [])
+        
 
         layout.append_figure_to_layer(layout.figures[flowrate_label], flowrate_label, cleartarget=True)
         #figure_output = os.path.join(directories[0], 'speed_time_nflies_automatic_figure_output.svg')
@@ -467,7 +485,8 @@ def plot_odor_response_speed_and_time_matrix_for_all_flowrates(directories, loca
 
 def plot_cross_directory_figure(directory, localtimerange=[14,36], average_within_paths=False,use_speed_intercept=None):
 
-    paths = mta.read_hdf5_file_to_pandas.get_filenames(directory, contains='', does_not_contain=['~', '.pyc', 'day','.svg','tmp'])
+    paths = mta.read_hdf5_file_to_pandas.get_filenames(directory, contains='', does_not_contain=['~', '.pyc', 'day','.svg','tmp', '.png', '.svg'])
+    print 'Paths: ', paths
     if len(paths) > 0:
         plot_odor_response_speed_and_time_matrix_for_all_flowrates(paths, localtimerange, average_within_paths,use_speed_intercept)
     else:

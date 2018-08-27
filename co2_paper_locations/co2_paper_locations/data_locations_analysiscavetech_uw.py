@@ -90,7 +90,7 @@ walking_arena_symmetric_stim_genetics_vinegar_hcs = '/media/caveman/CO2_hdf5_uw/
 walking_arena_tripleparadigm_hcs = '/media/caveman/CO2_hdf5_uw/CO2_data_notrajecs/low_flow_walking_arena_B/hcs'
 
 # for figure 3
-co2_calibration_windtunnel = '/home/caveman/Dropbox_flyranch/2017_CO2/analysis/figure3_windtunnel_walking/co2_concentration_wind_tunnel'
+co2_calibration_windtunnel = '/home/caveman/Dropbox_flyranch/2017_CO2/drosophila_co2_attraction/fig_2/co2_concentration_wind_tunnel' 
 
 # for supplemental figure
-shake_fly_mosquito_data = '/home/caveman/Dropbox_flyranch/2017_CO2/analysis/sup_fig_shake_fly_mosquito/shake_fly_mosquito_data'
+shake_fly_mosquito_data = '/home/caveman/Dropbox_flyranch/2017_CO2/drosophila_co2_attraction/supp_fig_10/shake_fly_mosquito_data'

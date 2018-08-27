@@ -68,7 +68,9 @@ def get_mean_speed_for_day(path):
     return times[0:1200], speed[0:1200]
                 
 def plot_circadian(ax, directory):
-    
+    layout, figure, axis = ax
+    fifidatafile = layout.fifidatafile
+
     paths = mta.read_hdf5_file_to_pandas.get_filenames(directory, contains='day')
     
     times = []
@@ -93,17 +95,33 @@ def plot_circadian(ax, directory):
     
     t = np.nanmean(times, axis=0)
     
-    ax.fill_between(t, conf_lo, conf_hi, edgecolor='none', facecolor=(0.001,0.001,0.001), alpha=0.3)
-    ax.plot(t, mean, linewidth=1, color='black')
+    #ax.fill_between(t, conf_lo, conf_hi, edgecolor='none', facecolor=(0.001,0.001,0.001), alpha=0.3)
+    #ax.plot(t, mean, linewidth=1, color='black')
+
+    figurefirst.deprecated_regenerate.custom('fly_plot_lib', 'plot.scatter_line',
+                                 layout, figure, axis, fifidatafile, 'Speed and 95 percent confidence', 
+                                ['Time (Hours)',
+                                 'List of speeds'],
+                                 t, speeds,
+                                 color=(0.001,0.001,0.001), shading='95conf', show_lines=False, show_mean=True)
     
     start = 0
     sunset = 11-3
     sunrise = (24-15+7)
     end = 20
         
-    ax.fill_between([start, sunset], [20,20], [0,0], facecolor='yellow', edgecolor='none', alpha=0.1, zorder=-100)
-    ax.fill_between([sunset, sunrise], [20,20], [0,0], facecolor='gray', edgecolor='none', alpha=0.3, zorder=-100)
-    ax.fill_between([sunrise, end], [20,20], [0,0], facecolor='yellow', edgecolor='none', alpha=0.1, zorder=-100)
+    #ax.fill_between([start, sunset], [20,20], [0,0], facecolor='yellow', edgecolor='none', alpha=0.1, zorder=-100)
+    figurefirst.deprecated_regenerate.mpl('fill_between', layout, figure, axis, fifidatafile, 'afternoon yellow background', 
+                              [], 
+                              [start, sunset], [20,20], [0,0], facecolor='yellow', edgecolor='none', alpha=0.1, zorder=-100)
+    #ax.fill_between([sunset, sunrise], [20,20], [0,0], facecolor='gray', edgecolor='none', alpha=0.3, zorder=-100)
+    figurefirst.deprecated_regenerate.mpl('fill_between', layout, figure, axis, fifidatafile, 'night gray background', 
+                              ['Nighttime (Hours)'], 
+                              [sunset, sunrise], [20,20], [0,0], facecolor='gray', edgecolor='none', alpha=0.3, zorder=-100)
+    #ax.fill_between([sunrise, end], [20,20], [0,0], facecolor='yellow', edgecolor='none', alpha=0.1, zorder=-100)
+    figurefirst.deprecated_regenerate.mpl('fill_between', layout, figure, axis, fifidatafile, 'morning yellow background', 
+                              [], 
+                              [sunrise, end], [20,20], [0,0], facecolor='yellow', edgecolor='none', alpha=0.1, zorder=-100)
     
     config = mta.read_hdf5_file_to_pandas.load_config_from_path(paths[0])
     if config.odor_control['action'][0] != 'off':
@@ -119,19 +137,35 @@ def plot_circadian(ax, directory):
     for r, row in enumerate(v):
         if row[5] != 'off':
             color = 'green'
-            ax.fill_between([row[4]/3600.-starttime, row[4]/3600.-starttime+600/3600.], [20, 20], [0,0], facecolor='white', edgecolor='none', zorder=-50)
+            #ax.fill_between([row[4]/3600.-starttime, row[4]/3600.-starttime+600/3600.], [20, 20], [0,0], facecolor='white', edgecolor='none', zorder=-50)
+            figurefirst.deprecated_regenerate.mpl('fill_between', layout, figure, axis, fifidatafile, 'white background '+str(r), 
+                              [], 
+                              [row[4]/3600.-starttime, row[4]/3600.-starttime+600/3600.], [20, 20], [0,0], facecolor='white', edgecolor='none', zorder=-50)
             print row[4]/3600., starttime
-            ax.fill_between([row[4]/3600.-starttime, row[4]/3600.-starttime+600/3600.], [20, 20], [0,0], facecolor=color, edgecolor='none', zorder=-50, alpha=0.3)
-    
-    ax.set_ylim(config.ylim_speed[0], config.ylim_speed[1])
-    ax.set_xlim(start, end)
-    
+            #ax.fill_between([row[4]/3600.-starttime, row[4]/3600.-starttime+600/3600.], [20, 20], [0,0], facecolor=color, edgecolor='none', zorder=-50, alpha=0.3)
+            figurefirst.deprecated_regenerate.mpl('fill_between', layout, figure, axis, fifidatafile, 'green background '+str(r), 
+                              ['Odor on (Hours)'], 
+                              [row[4]/3600.-starttime, row[4]/3600.-starttime+600/3600.], [20, 20], [0,0], facecolor=color, edgecolor='none', zorder=-50, alpha=0.3)
+
+    #ax.set_ylim(config.ylim_speed[0], config.ylim_speed[1])
+    figurefirst.deprecated_regenerate.mpl('set_ylim', layout, figure, axis, fifidatafile, 'ylim', [], 
+                              config.ylim_speed[0], config.ylim_speed[1])
+
+    #ax.set_xlim(start, end)
+    figurefirst.deprecated_regenerate.mpl('set_xlim', layout, figure, axis, fifidatafile, 'xlim', [], 
+                              start, end)
+
     xticks = [0, sunset, sunrise, end]
     yticks = []
     #figurefirst.mpl_functions.adjust_spines(ax, ['left', 'bottom'], xticks=xticks, yticks=yticks)
-    figurefirst.mpl_functions.adjust_spines(ax, [], xticks=xticks)
+    #figurefirst.mpl_functions.adjust_spines(ax, [], xticks=xticks)
+    figurefirst.deprecated_regenerate.custom( 'figurefirst', 'mpl_functions.adjust_spines', layout, figure, axis, fifidatafile, 'adjust x spines', [], 
+                              [])
+
 
 def plot_circadian_for_tmaze_exps(ax, directory, t_range=[0,14]):
+    layout, figure, axis = ax
+    fifidatafile = layout.fifidatafile
 
     paths = mta.read_hdf5_file_to_pandas.get_filenames(directory, contains='day')
     
@@ -157,12 +191,18 @@ def plot_circadian_for_tmaze_exps(ax, directory, t_range=[0,14]):
     
     t = np.nanmean(times, axis=0)
     
-    ax.fill_between(t, conf_lo, conf_hi, edgecolor='none', facecolor=(0.001,0.001,0.001), alpha=0.3)
-    ax.plot(t, mean, linewidth=1, color='black')
 
-
-    ax.fill_between([np.min(t), np.max(t)], [20,20], [0,0], facecolor='yellow', edgecolor='none', alpha=0.1, zorder=-100)
-
+    figurefirst.deprecated_regenerate.custom('fly_plot_lib', 'plot.scatter_line',
+                                 layout, figure, axis, fifidatafile, 'speed and 95 percent confidence', 
+                                ['Time (Hours)',
+                                 'List of speeds'],
+                                 t, speeds,
+                                 color=(0.001,0.001,0.001), shading='95conf', show_lines=False, show_mean=True, alpha=0.2)
+    
+    #ax.fill_between([np.min(t), np.max(t)], [20,20], [0,0], facecolor='yellow', edgecolor='none', alpha=0.1, zorder=-100)
+    figurefirst.deprecated_regenerate.mpl('fill_between', layout, figure, axis, fifidatafile, 'yellow background', 
+                              [], 
+                              [np.min(t), np.max(t)], [20,20], [0,0], facecolor='yellow', edgecolor='none', alpha=0.1, zorder=-100)
 
 
     config = mta.read_hdf5_file_to_pandas.load_config_from_path(paths[0])
@@ -179,9 +219,21 @@ def plot_circadian_for_tmaze_exps(ax, directory, t_range=[0,14]):
     for r, row in enumerate(v):
         if row[5] != 'off':
             color = 'green'
-            ax.fill_between([row[4]/3600.-starttime, row[4]/3600.-starttime+600/3600.], [20, 20], [0,0], facecolor='white', edgecolor='none', zorder=-50)
+            #ax.fill_between([row[4]/3600.-starttime, row[4]/3600.-starttime+600/3600.], [20, 20], [0,0], facecolor='white', edgecolor='none', zorder=-50)
+            figurefirst.deprecated_regenerate.mpl('fill_between', layout, figure, axis, fifidatafile, 'white background', 
+                                      [], 
+                                      [row[4]/3600.-starttime, row[4]/3600.-starttime+600/3600.], [20, 20], [0,0], facecolor='white', edgecolor='none', zorder=-50)
+
             print row[4]/3600., starttime
-            ax.fill_between([row[4]/3600.-starttime, row[4]/3600.-starttime+600/3600.], [20, 20], [0,0], facecolor=color, edgecolor='none', zorder=-50, alpha=0.3)
-    
-    ax.set_xlim(t_range[0]/60., t_range[1]/60.)
-    ax.set_ylim(config.ylim_speed[0], config.ylim_speed[1])
+            #ax.fill_between([row[4]/3600.-starttime, row[4]/3600.-starttime+600/3600.], [20, 20], [0,0], facecolor=color, edgecolor='none', zorder=-50, alpha=0.3)
+            figurefirst.deprecated_regenerate.mpl('fill_between', layout, figure, axis, fifidatafile, 'green background', 
+                                      ['Time range when odor on (Hours)'], 
+                                      [row[4]/3600.-starttime, row[4]/3600.-starttime+600/3600.], [20, 20], [0,0], facecolor=color, edgecolor='none', zorder=-50, alpha=0.3)
+
+    #ax.set_xlim(t_range[0]/60., t_range[1]/60.)
+    figurefirst.deprecated_regenerate.mpl('set_xlim', ax[0], ax[1], ax[2], fifidatafile, 'xlim', [], 
+                              t_range[0]/60., t_range[1]/60.)
+
+    #ax.set_ylim(config.ylim_speed[0], config.ylim_speed[1])
+    figurefirst.deprecated_regenerate.mpl('set_ylim', ax[0], ax[1], ax[2], fifidatafile, 'ylim', [], 
+                              config.ylim_speed[0], config.ylim_speed[1])

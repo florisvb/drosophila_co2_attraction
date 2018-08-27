@@ -9,6 +9,7 @@ import matplotlib
 import fly_plot_lib.plot as fpl
 import flystat
 import scipy.signal
+import co2_paper_locations
 
 def get_filename(path, contains, does_not_contain=[]):
     cmd = 'ls ' + path
@@ -45,6 +46,12 @@ def get_95_confidence_intervals(data, iterations=100):
     return bootstrapped_data[index_lo, :], bootstrapped_data[index_hi, :]
 
 def plot_mean_and_95_confidence(ax, x, y, color, iterations=100, normalize_to_one=False, show_confidence=True, color_mean=False, zorder=1):
+    if type(ax) is list:
+        layout, figure, axis = ax
+        ax = layout.axes[(figure, axis)]
+        fifidatafile = layout.fifidatafile
+    else:
+        fifidatafile = ''
     wn = 0.05
     
     if normalize_to_one:
@@ -67,8 +74,23 @@ def plot_mean_and_95_confidence(ax, x, y, color, iterations=100, normalize_to_on
             lo_filtered = scipy.signal.filtfilt(b,a,lo)
             hi_filtered = scipy.signal.filtfilt(b,a,hi)
             
-            ax.fill_between(np.mean(x, axis=0), (lo_filtered-baseline_shift)/norm_factor, (hi_filtered-baseline_shift)/norm_factor, facecolor=color, alpha=0.2, edgecolor='none', zorder=zorder-1)
-    
+            #ax.fill_between(np.mean(x, axis=0), (lo_filtered-baseline_shift)/norm_factor, (hi_filtered-baseline_shift)/norm_factor, facecolor=color, alpha=0.2, edgecolor='none', zorder=zorder-1)
+            y_baseline_shifted = [(yi-baseline_shift)/norm_factor for yi in y]
+            #figurefirst.deprecated_regenerate.custom('fly_plot_lib', 'plot.scatter_line',
+            #                     ax[0], ax[1], ax[2], fifidatafile, 'data confidence interval ' + color, 
+            #                    ['Time',
+            #                     'List of n flies'],
+            #                     np.mean(x, axis=0), y_baseline_shifted,
+            #                     color=color, shading='95conf', show_lines=False, show_mean=False, alpha=0.2)
+            if ax.breadcrumb['layout_filename'] == co2_paper_locations.figure_template_locations.figure4_walking_arena_activity:
+                title = 'Mean number of flies in '+color+' zone'
+                description2 = 'List of mean number of flies for each trial'
+            else:
+                title = 'Preference Index for flies'
+                description2 = 'List of PI for each trial'
+            ax._custom([title, 'Time (secs)', description2], 'fly_plot_lib.plot.scatter_line', np.mean(x, axis=0), y_baseline_shifted, 
+                        color=color, shading='95conf', show_lines=False, show_mean=False, alpha=0.2)
+
     mean = (np.mean(y, axis=0)-baseline_shift)/norm_factor
     
     print '********************: ', np.max(mean), norm_factor 
@@ -76,21 +98,38 @@ def plot_mean_and_95_confidence(ax, x, y, color, iterations=100, normalize_to_on
     mean_filtered = scipy.signal.filtfilt(b,a,mean)
     
     if color_mean is False:
-        ax.plot(np.mean(x, axis=0), mean_filtered, color=color, zorder=zorder)
+        #ax.plot(np.mean(x, axis=0), mean_filtered, color=color, zorder=zorder)
+        #figurefirst.deprecated_regenerate.mpl('plot', ax[0], ax[1], ax[2], fifidatafile, 'data mean ' + color, 
+        #                      ['Time',
+        #                       '2.75 percent Confidence',
+        #                       '97.5 percent Confidence'], 
+        #                       np.mean(x, axis=0), mean_filtered, color=color, zorder=zorder)
+        if ax.breadcrumb['layout_filename'] == co2_paper_locations.figure_template_locations.figure4_walking_arena_activity:
+            title = 'Mean number of flies in '+color+' zone'
+            description2 = 'Mean number of flies'
+        else:
+            title = 'Mean Preference Index for flies'
+            description2 = 'Mean PI flies'
+        ax._plot([title, 'Time (secs)', description2], np.mean(x, axis=0), mean_filtered, color=color, zorder=zorder)
+
     else:
         indices = np.arange(0,len(mean_filtered),10)
         x = np.mean(x, axis=0)[indices]
         y = mean_filtered[indices]
         c = color_mean['color'][indices]
-        fpl.colorline(ax,   x, 
-                            y, 
-                            c,
-                            cmap=color_mean['cmap'],
-                            norm=color_mean['norm'],
-                            zorder=zorder)
+        ax._custom(['Colored Preference Index for flies', 
+                    'Time (secs)', 'Mean PI flies', 'Color (Mean PI flies)'], 'fly_plot_lib.plot.colorline', 
+                    x, 
+                    y, 
+                    c,
+                    cmap=color_mean['cmap'],
+                    norm=color_mean['norm'],
+                    zorder=zorder)
 
 def plot_n_flies_in_control_and_odor_regions(ax, paths, localtimerange, flowrate, average_within_paths=False, normalize_to_one=False, traces_to_plot=['odor', 'control'], 
                                              show_confidence=True, color_mean=False, colors={'odor': 'red', 'control':'blue'}, fill_odor=True):
+    layout, figure, axis = ax
+    fifidatafile = layout.fifidatafile
     if type(paths) is not list:
         print 'LOADING PATHS'
         paths = mta.read_hdf5_file_to_pandas.get_filenames(paths, contains='day')
@@ -118,10 +157,13 @@ def plot_n_flies_in_control_and_odor_regions(ax, paths, localtimerange, flowrate
         speed = np.hstack((speed, pd_tmp.speed.values))
         t = np.hstack((t, pd_tmp.t.values))
     
-    config = mta.read_hdf5_file_to_pandas.load_config_from_path(path)
+    config = mta.read_hdf5_file_to_pandas.load_config_from_path(paths[-1])
     
     if fill_odor:
-        ax.fill_between([0, 600], 0, 10, facecolor='green', edgecolor='none', alpha=0.2)
+        #ax.fill_between([0, 600], 0, 10, facecolor='green', edgecolor='none', alpha=0.2)
+        figurefirst.deprecated_regenerate.mpl('fill_between', layout, figure, axis, fifidatafile, 'Odor stimulus', 
+                              ['Time odor is on (secs)'], 
+                              [0, 600], 0, 10, facecolor='green', edgecolor='none', alpha=0.2)
     
     if 'odor' in traces_to_plot:
         plot_mean_and_95_confidence(ax, t, odor, colors['odor'], iterations=100, normalize_to_one=normalize_to_one, show_confidence=show_confidence, color_mean=color_mean)
@@ -131,14 +173,23 @@ def plot_n_flies_in_control_and_odor_regions(ax, paths, localtimerange, flowrate
         plot_mean_and_95_confidence(ax, t, speed, (0.001, 0.001, 0.001), iterations=100, normalize_to_one=normalize_to_one, show_confidence=show_confidence)
     
     if 'speed' in traces_to_plot:
-        ax.set_ylim(0,7)
+        #ax.set_ylim(0,7)
+        figurefirst.deprecated_regenerate.mpl('set_ylim', ax[0], ax[1], ax[2], fifidatafile, 'ylim', [], 
+                              0,7)
     else:
-        ax.set_ylim(0,1)
+        #ax.set_ylim(0,1)
+        figurefirst.deprecated_regenerate.mpl('set_ylim', ax[0], ax[1], ax[2], fifidatafile, 'ylim', [], 
+                              0,1)
 
-    ax.set_xlim(config.xlim_nflies[0], config.xlim_nflies[1]) #-600, 1200)
+    #ax.set_xlim(config.xlim_nflies[0], config.xlim_nflies[1]) #-600, 1200)
+    figurefirst.deprecated_regenerate.mpl('set_xlim', ax[0], ax[1], ax[2], fifidatafile, 'xlim', [], 
+                              config.xlim_nflies[0], config.xlim_nflies[1]) #-600, 1200)
     
     try:
-        figurefirst.mpl_functions.adjust_spines(ax, [])
+        #figurefirst.mpl_functions.adjust_spines(ax, [])
+        figurefirst.deprecated_regenerate.custom( 'figurefirst', 'mpl_functions.adjust_spines', ax[0], ax[1], ax[2], fifidatafile, 'adjust spines', [], 
+                              [])
+
     except:
         pass # probably already did this
 
@@ -281,6 +332,8 @@ def plot_raw_scatter_with_cmap(ax, scatter_data, key, average_within_paths=False
     figurefirst.mpl_functions.adjust_spines(ax, [])
 
 def plot_raw_scatter(ax, scatter_data, key, average_within_paths=False, hide_markers=False):
+    layout, figure, axis = ax
+    fifidatafile = layout.fifidatafile
     if key == 'n_flies_odor':
         color = 'red'
         confidence_color = 'red'
@@ -296,26 +349,50 @@ def plot_raw_scatter(ax, scatter_data, key, average_within_paths=False, hide_mar
         #color = cmap( d/float(len(scatter_data[key])) )
         print key
         print y_data
-        fpl.scatter_box(ax, startx+d, y_data, xwidth=0.5, ywidth=0.1, color='black', marker_linewidth=0, flipxy=False, shading='none', markersize=1, random_scatter=False, hide_markers=hide_markers)
-        fpl.scatter_box(ax, startx+d, y_data, xwidth=0.5, ywidth=0.1, color=color, marker_linewidth=0, flipxy=False, shading='none', markersize=0.8, random_scatter=False, hide_markers=hide_markers)
-    
+        #fpl.scatter_box(ax, startx+d, y_data, xwidth=0.5, ywidth=0.1, color='black', marker_linewidth=0, flipxy=False, shading='none', markersize=1, random_scatter=False, hide_markers=hide_markers)
+        #fpl.scatter_box(ax, startx+d, y_data, xwidth=0.5, ywidth=0.1, color=color, marker_linewidth=0, shading='95conf', flipxy=False, markersize=0.8, random_scatter=False, hide_markers=hide_markers)
+        #figurefirst.deprecated_regenerate.custom( 'fly_plot_lib', 'plot.scatter_box', ax[0], ax[1], ax[2], fifidatafile, '95 percent CI for ' + key,
+        #                          ['index',
+        #                           'List of trajectories that entered control and binary value for whether they entered test volume'],
+        #                           startx+d, y_data, xwidth=0.5, ywidth=0.1, color=color, marker_linewidth=0, shading='95conf', flipxy=False, markersize=0.8, random_scatter=False, hide_markers=hide_markers)
+
+
+
     if average_within_paths:
         all_data_points = np.array([np.nanmean(d) for d in scatter_data[key]])
     else:
         all_data_points = np.hstack(scatter_data[key])
     
     conf_interval = flystat.resampling.bootstrap_confidence_intervals_from_data(all_data_points, iterations=5000, use='mean')
-    ax.hlines([np.nanmean(all_data_points)], startx-1.5, len(scatter_data[key])+1.5, colors=[confidence_color], linewidth=1)
-    ax.fill_between([startx-1.5, len(scatter_data[key])+1.5], [conf_interval[0], conf_interval[0]], [conf_interval[1], conf_interval[1]], facecolor=confidence_color, edgecolor='none', alpha=0.2)
     
-    
+
+    if 0:
+        #ax.hlines([np.nanmean(all_data_points)], startx-1.5, len(scatter_data[key])+1.5, colors=[confidence_color], linewidth=1)
+        figurefirst.deprecated_regenerate.mpl('hlines', ax[0], ax[1], ax[2], fifidatafile, 'Mean '+key,
+                                  ['Mean '+key],
+                                   [np.nanmean(all_data_points)], startx-1.5, len(scatter_data[key])+1.5, colors=[confidence_color], linewidth=1)
+        #ax.fill_between([startx-1.5, len(scatter_data[key])+1.5], [conf_interval[0], conf_interval[0]], [conf_interval[1], conf_interval[1]], facecolor=confidence_color, edgecolor='none', alpha=0.2)
+        figurefirst.deprecated_regenerate.mpl('fill_between', ax[0], ax[1], ax[2], fifidatafile, '95 percent confidence '+key,
+                                  ['95 perc CI '+key],
+                                  [startx-1.5, len(scatter_data[key])+1.5], [conf_interval[0], conf_interval[0]], [conf_interval[1], conf_interval[1]], facecolor=confidence_color, edgecolor='none', alpha=0.2)
+    figurefirst.deprecated_regenerate.custom('fly_plot_lib', 'plot.scatter_box',
+                                 ax[0], ax[1], ax[2], fifidatafile, 'Mean '+key,
+                                 ['index',
+                                  'Values for '+key+' for each trial'],
+                                 0, all_data_points, 
+                                 xwidth=3, ywidth=0.1, color=confidence_color, edgecolor='none', flipxy=False, shading='95conf', linewidth=1, use='mean', hide_markers=True, alpha=0.2)
+        
 
     if key == 'n_flies_odor' or key == 'n_flies_control':
         n = 1#scatter_data['config'].nflies
-        ax.set_ylim(0, n)
+        #ax.set_ylim(0, n)
+        figurefirst.deprecated_regenerate.mpl('set_ylim', ax[0], ax[1], ax[2], fifidatafile, 'set_ylim', [], 
+                              0, n)
     elif key == 'speed':
-        ax.set_ylim(0, 7)
+        #ax.set_ylim(0, 7)
+        figurefirst.deprecated_regenerate.mpl('set_ylim', ax[0], ax[1], ax[2], fifidatafile, 'set_ylim', [], 
+                              0, 7)
         
-    figurefirst.mpl_functions.adjust_spines(ax, [])
-        
+    figurefirst.deprecated_regenerate.custom( 'figurefirst', 'mpl_functions.adjust_spines', ax[0], ax[1], ax[2], fifidatafile, 'adjust spines', [], 
+                              [])
         
