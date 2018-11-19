@@ -48,11 +48,11 @@ def make_cross_directory_figure(directory, label, flowrate=1, use_speed_intercep
         svg = co2_paper_locations.figure_template_locations.supp_fig_7_ir25a_ir40a
         speed_svg = None
 
-    layout = figurefirst.svg_to_axes.FigureLayout(svg)
+    layout = figurefirst.svg_to_axes.FigureLayout(svg, dpi=600)
     layout.make_mplfigures()
 
     if speed_svg is not None:
-        speed_layout = figurefirst.svg_to_axes.FigureLayout(speed_svg)
+        speed_layout = figurefirst.svg_to_axes.FigureLayout(speed_svg, dpi=600)
         speed_layout.make_mplfigures()
     else:
         speed_layout = None
@@ -168,7 +168,7 @@ def make_supplemental_summary_of_genetic_experiments(figure='supplemental'):
 
 def make_colormaps(svg):
     
-    layout = figurefirst.svg_to_axes.FigureLayout(svg)
+    layout = figurefirst.svg_to_axes.FigureLayout(svg, dpi=600)
     layout.make_mplfigures()
 
     #fpl.colorbar(ax=layout.axes[('cmap', 'speed_cmap')], colormap='hot')
@@ -229,7 +229,7 @@ def make_hcs_full(concentration_dataset=False, odor='co2', figure='co2'):
         if odor == 'co2':
             use_speed_intercept = USE_SPEED_INTERCEPT
 
-    layout = figurefirst.svg_to_axes.FigureLayout(svg)
+    layout = figurefirst.svg_to_axes.FigureLayout(svg, dpi=600)
     layout.make_mplfigures()
     fifidatafile  = svg.split('.svg')[0], '_figure_data.pickle'
     layout.fifidatafile = fifidatafile
@@ -274,7 +274,7 @@ def make_hcs_full_for_specific_directory(directory, flowrate, name, use_speed_in
 
     print paths
 
-    layout = figurefirst.svg_to_axes.FigureLayout(svg_template)
+    layout = figurefirst.svg_to_axes.FigureLayout(svg_template, dpi=600)
     layout.make_mplfigures()
 
     plot_nflies_vs_speed_scatter.plot_odor_response_speed_and_time_matrix(paths, flowrates=flowrate, flowrate_label='hcs_full', 

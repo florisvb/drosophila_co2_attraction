@@ -36,7 +36,7 @@ def get_paper_layout(version='old'):
         svg = co2_paper_locations.figure_template_locations.figure3_windtunnel_walking
     else:
         svg = co2_paper_locations.figure_template_locations.figure3_windtunnel_walking_simple
-    layout = figurefirst.svg_to_axes.FigureLayout(svg)
+    layout = figurefirst.svg_to_axes.FigureLayout(svg, dpi=600)
     layout.make_mplfigures()
     return layout
 

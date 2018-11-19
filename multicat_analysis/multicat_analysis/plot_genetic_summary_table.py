@@ -199,7 +199,9 @@ def write_in_stats(odor='co2', bonferoni_N=11):
             layout.svgitems[svg_group_name][label+'_attr'].text = text
             layout.svgitems[svg_group_name][label+'_attr'].style['font-size'] = 768
             layout.svgitems[svg_group_name][label+'_attr'].style['font-weight'] = 'bold'
-            layout.svgitems[svg_group_name][label+'_attr'].style['font-family'] = 'FreeSans'
+            layout.svgitems[svg_group_name][label+'_attr'].style['font-family'] = 'Arial'
+            layout.svgitems[svg_group_name][label+'_attr'].style['-inkscape-font-specification'] = 'Arial, Bold'
+            
             #if ks_attraction_pval > 0.005 or np.abs(mean_attraction_label) > 0.2:
             #    layout.svgitems[('attraction_pval', label+suffix)].style['fill'] = '#ffffff'
             #else:
@@ -249,7 +251,8 @@ def write_in_values(odor='co2'):
             layout.svgitems[svg_group_name][label+'_attr'].text = text
             layout.svgitems[svg_group_name][label+'_attr'].style['font-size'] = 768
             layout.svgitems[svg_group_name][label+'_attr'].style['font-weight'] = 'bold'
-            layout.svgitems[svg_group_name][label+'_attr'].style['font-family'] = 'FreeSans'
+            layout.svgitems[svg_group_name][label+'_attr'].style['font-family'] = 'Arial'
+            layout.svgitems[svg_group_name][label+'_attr'].style['-inkscape-font-specification'] = 'Arial, Bold'
             if np.abs(mean_attraction_label) > 0.1:
                 layout.svgitems[svg_group_name][label+'_attr'].style['fill'] = '#ffffff'
             else:
