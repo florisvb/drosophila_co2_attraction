@@ -338,11 +338,13 @@ def plot_attraction_index_vs_speed():
     figurefirst.deprecated_regenerate.custom( 'figurefirst', 'mpl_functions.adjust_spines', layout, figure, axis, fifidatafile, 'adjust x spines', [], 
                               ['left', 'bottom'], spine_locations={'left': 5, 'bottom': 5}, xticks=[0,speed_intersection, 8], yticks=[-4, 0, 4], linewidth=0.5, tick_length=2.5)
 
-    
+    figurefirst.deprecated_regenerate.mpl('set_yticklabels', layout, figure, axis, fifidatafile, 'y tick labels', [], 
+                              [])
+
     xticklabels = ['0', str(speed_intersection), '8']
     #ax.set_xticklabels(xticklabels)
     figurefirst.deprecated_regenerate.mpl('set_xticklabels', layout, figure, axis, fifidatafile, 'x tick labels', [], 
-                              xticklabels)
+                              [])
     #flytext.set_fontsize(ax.figure, 6)
     figurefirst.deprecated_regenerate.custom( 'figurefirst', 'mpl_functions.set_fontsize', layout, figure, axis, fifidatafile, 'set fontsize', [], 
                                   6)
